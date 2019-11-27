@@ -316,3 +316,277 @@ FOREIGN KEY ("custom_emoji_id")
   ↳ bin/rails:9
   [1m[35m (389.6ms)[0m  [1m[35mCREATE DATABASE "unrply_test" ENCODING = 'unicode'[0m
   ↳ bin/rails:9
+  [1m[35m (16.7ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  ↳ bin/rails:9
+  [1m[35m (5.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ bin/rails:9
+Migrating to DeviseCreateUsers (20191127063208)
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (10.7ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  ↳ db/migrate/20191127063208_devise_create_users.rb:5
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users"  ("email")[0m
+  ↳ db/migrate/20191127063208_devise_create_users.rb:39
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users"  ("reset_password_token")[0m
+  ↳ db/migrate/20191127063208_devise_create_users.rb:40
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127063208"]]
+  ↳ bin/rails:9
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateRooms (20191127064248)
+  [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (7.7ms)[0m  [1m[35mCREATE TABLE "rooms" ("id" bigserial primary key, "owner_id" bigint, "access_code" character varying, "color" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_0704b8e2d2"
+FOREIGN KEY ("owner_id")
+  REFERENCES "users" ("id")
+)[0m
+  ↳ db/migrate/20191127064248_create_rooms.rb:3
+  [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_rooms_on_owner_id" ON "rooms"  ("owner_id")[0m
+  ↳ db/migrate/20191127064248_create_rooms.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127064248"]]
+  ↳ bin/rails:9
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateMessages (20191127064642)
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (6.6ms)[0m  [1m[35mCREATE TABLE "messages" ("id" bigserial primary key, "content" character varying, "user_id" bigint, "room_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_273a25a7a6"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_a8db0fb63a"
+FOREIGN KEY ("room_id")
+  REFERENCES "rooms" ("id")
+)[0m
+  ↳ db/migrate/20191127064642_create_messages.rb:3
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE  INDEX  "index_messages_on_user_id" ON "messages"  ("user_id")[0m
+  ↳ db/migrate/20191127064642_create_messages.rb:3
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE  INDEX  "index_messages_on_room_id" ON "messages"  ("room_id")[0m
+  ↳ db/migrate/20191127064642_create_messages.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127064642"]]
+  ↳ bin/rails:9
+  [1m[35m (0.9ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateRoomsUserSettings (20191127081735)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (6.0ms)[0m  [1m[35mCREATE TABLE "rooms_user_settings" ("id" bigserial primary key, "room_id" bigint, "user_id" bigint, "nickname" character varying, "admin" boolean, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_973ec14bd9"
+FOREIGN KEY ("room_id")
+  REFERENCES "rooms" ("id")
+, CONSTRAINT "fk_rails_5872850807"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+)[0m
+  ↳ db/migrate/20191127081735_create_rooms_user_settings.rb:3
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_rooms_user_settings_on_room_id" ON "rooms_user_settings"  ("room_id")[0m
+  ↳ db/migrate/20191127081735_create_rooms_user_settings.rb:3
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE  INDEX  "index_rooms_user_settings_on_user_id" ON "rooms_user_settings"  ("user_id")[0m
+  ↳ db/migrate/20191127081735_create_rooms_user_settings.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127081735"]]
+  ↳ bin/rails:9
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateEmojis (20191127081837)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (4.3ms)[0m  [1m[35mCREATE TABLE "emojis" ("id" bigserial primary key, "code" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  ↳ db/migrate/20191127081837_create_emojis.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127081837"]]
+  ↳ bin/rails:9
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateCustomEmojis (20191127081902)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (4.8ms)[0m  [1m[35mCREATE TABLE "custom_emojis" ("id" bigserial primary key, "code" character varying, "room_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_ab5068fbe8"
+FOREIGN KEY ("room_id")
+  REFERENCES "rooms" ("id")
+)[0m
+  ↳ db/migrate/20191127081902_create_custom_emojis.rb:3
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE  INDEX  "index_custom_emojis_on_room_id" ON "custom_emojis"  ("room_id")[0m
+  ↳ db/migrate/20191127081902_create_custom_emojis.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127081902"]]
+  ↳ bin/rails:9
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateCategories (20191127081939)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (4.3ms)[0m  [1m[35mCREATE TABLE "categories" ("id" bigserial primary key, "name" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  ↳ db/migrate/20191127081939_create_categories.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127081939"]]
+  ↳ bin/rails:9
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateTableCategoriesEmojis (20191127082821)
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "table_categories_emojis" ("id" bigserial primary key, "category_id" bigint, "emojiable_type" character varying, "emojiable_id" bigint, CONSTRAINT "fk_rails_507fb44cf1"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+)[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_table_categories_emojis_on_category_id" ON "table_categories_emojis"  ("category_id")[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (2.4ms)[0m  [1m[31mROLLBACK[0m
+  ↳ bin/rails:9
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ bin/rails:9
+Migrating to CreateTableCategoriesEmojis (20191127082821)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (14.8ms)[0m  [1m[35mCREATE TABLE "table_categories_emojis" ("id" bigserial primary key, "category_id" bigint, "emojiable_type" character varying, "emojiable_id" bigint, CONSTRAINT "fk_rails_507fb44cf1"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+)[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE  INDEX  "index_table_categories_emojis_on_category_id" ON "table_categories_emojis"  ("category_id")[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (1.9ms)[0m  [1m[31mROLLBACK[0m
+  ↳ bin/rails:9
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ bin/rails:9
+Migrating to CreateTableCategoriesEmojis (20191127082821)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (12.8ms)[0m  [1m[35mCREATE TABLE "table_categories_emojis" ("id" bigserial primary key, "category_id" bigint, "emojiable_type" character varying, "emojiable_id" bigint, CONSTRAINT "fk_rails_507fb44cf1"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+)[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_table_categories_emojis_on_category_id" ON "table_categories_emojis"  ("category_id")[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (2.1ms)[0m  [1m[31mROLLBACK[0m
+  ↳ bin/rails:9
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_try_advisory_lock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ bin/rails:9
+Migrating to CreateTableCategoriesEmojis (20191127082821)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (14.6ms)[0m  [1m[35mCREATE TABLE "table_categories_emojis" ("id" bigserial primary key, "category_id" bigint, "emojiable_type" character varying, "emojiable_id" bigint, CONSTRAINT "fk_rails_507fb44cf1"
+FOREIGN KEY ("category_id")
+  REFERENCES "categories" ("id")
+)[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE  INDEX  "index_table_categories_emojis_on_category_id" ON "table_categories_emojis"  ("category_id")[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "emojiable" ON "table_categories_emojis"  ("emojiable_type", "emojiable_id")[0m
+  ↳ db/migrate/20191127082821_create_table_categories_emojis.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127082821"]]
+  ↳ bin/rails:9
+  [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateJoinTableEmojisRoom (20191127083041)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (2.0ms)[0m  [1m[35mCREATE TABLE "emojis_rooms" ("emoji_id" bigint, "room_id" bigint, CONSTRAINT "fk_rails_ca8952240d"
+FOREIGN KEY ("emoji_id")
+  REFERENCES "emojis" ("id")
+, CONSTRAINT "fk_rails_1785aacffe"
+FOREIGN KEY ("room_id")
+  REFERENCES "rooms" ("id")
+)[0m
+  ↳ db/migrate/20191127083041_create_join_table_emojis_room.rb:3
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE  INDEX  "index_emojis_rooms_on_emoji_id" ON "emojis_rooms"  ("emoji_id")[0m
+  ↳ db/migrate/20191127083041_create_join_table_emojis_room.rb:3
+  [1m[35m (1.4ms)[0m  [1m[35mCREATE  INDEX  "index_emojis_rooms_on_room_id" ON "emojis_rooms"  ("room_id")[0m
+  ↳ db/migrate/20191127083041_create_join_table_emojis_room.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127083041"]]
+  ↳ bin/rails:9
+  [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateReactions (20191127083128)
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (6.0ms)[0m  [1m[35mCREATE TABLE "reactions" ("id" bigserial primary key, "emojiable_type" character varying, "emojiable_id" bigint, "user_id" bigint, "message_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_9f02fc96a0"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_6bb5033c5f"
+FOREIGN KEY ("message_id")
+  REFERENCES "messages" ("id")
+)[0m
+  ↳ db/migrate/20191127083128_create_reactions.rb:3
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE  INDEX  "index_reactions_on_emojiable_type_and_emojiable_id" ON "reactions"  ("emojiable_type", "emojiable_id")[0m
+  ↳ db/migrate/20191127083128_create_reactions.rb:3
+  [1m[35m (1.8ms)[0m  [1m[35mCREATE  INDEX  "index_reactions_on_user_id" ON "reactions"  ("user_id")[0m
+  ↳ db/migrate/20191127083128_create_reactions.rb:3
+  [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_reactions_on_message_id" ON "reactions"  ("message_id")[0m
+  ↳ db/migrate/20191127083128_create_reactions.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127083128"]]
+  ↳ bin/rails:9
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateAchievements (20191127083228)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (3.6ms)[0m  [1m[35mCREATE TABLE "achievements" ("id" bigserial primary key, "message" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+  ↳ db/migrate/20191127083228_create_achievements.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127083228"]]
+  ↳ bin/rails:9
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateJoinTableAchievementsRoom (20191127083329)
+  [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (2.2ms)[0m  [1m[35mCREATE TABLE "achievements_rooms" ("achievement_id" bigint, "room_id" bigint, CONSTRAINT "fk_rails_ee08e3c6c2"
+FOREIGN KEY ("achievement_id")
+  REFERENCES "achievements" ("id")
+, CONSTRAINT "fk_rails_9c1f7d451c"
+FOREIGN KEY ("room_id")
+  REFERENCES "rooms" ("id")
+)[0m
+  ↳ db/migrate/20191127083329_create_join_table_achievements_room.rb:3
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE  INDEX  "index_achievements_rooms_on_achievement_id" ON "achievements_rooms"  ("achievement_id")[0m
+  ↳ db/migrate/20191127083329_create_join_table_achievements_room.rb:3
+  [1m[35m (1.3ms)[0m  [1m[35mCREATE  INDEX  "index_achievements_rooms_on_room_id" ON "achievements_rooms"  ("room_id")[0m
+  ↳ db/migrate/20191127083329_create_join_table_achievements_room.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127083329"]]
+  ↳ bin/rails:9
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+Migrating to CreateTypingMessages (20191127083841)
+  [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[35m (5.1ms)[0m  [1m[35mCREATE TABLE "typing_messages" ("id" bigserial primary key, "user_id" bigint, "room_id" bigint, "message" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_427b7ee9e3"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_408617c23c"
+FOREIGN KEY ("room_id")
+  REFERENCES "rooms" ("id")
+)[0m
+  ↳ db/migrate/20191127083841_create_typing_messages.rb:3
+  [1m[35m (1.6ms)[0m  [1m[35mCREATE  INDEX  "index_typing_messages_on_user_id" ON "typing_messages"  ("user_id")[0m
+  ↳ db/migrate/20191127083841_create_typing_messages.rb:3
+  [1m[35m (1.5ms)[0m  [1m[35mCREATE  INDEX  "index_typing_messages_on_room_id" ON "typing_messages"  ("room_id")[0m
+  ↳ db/migrate/20191127083841_create_typing_messages.rb:3
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20191127083841"]]
+  ↳ bin/rails:9
+  [1m[35m (0.7ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+  [1m[36mActiveRecord::InternalMetadata Load (0.9ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  ↳ bin/rails:9
+  [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+  ↳ bin/rails:9
+  [1m[36mActiveRecord::InternalMetadata Create (0.6ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2019-11-27 08:45:38.242327"], ["updated_at", "2019-11-27 08:45:38.242327"]]
+  ↳ bin/rails:9
+  [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+  ↳ bin/rails:9
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(3036821713197963075)[0m
+  ↳ bin/rails:9
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ bin/rails:9
